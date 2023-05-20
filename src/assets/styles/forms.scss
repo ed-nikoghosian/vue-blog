@@ -1,0 +1,23 @@
+.post-form {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 760px;
+  padding: 24px 0;
+}
+
+.add-comment-form {
+  width: 100%;
+  .button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 24px;
+    .btn-primary {
+      width: 200px;
+
+      @media screen and (max-width: 768px) {
+        width: 100%;
+      }
+    }
+  }
+}

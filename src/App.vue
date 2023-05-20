@@ -1,26 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <app-layout v-if="isReady">
+    <router-view />
+  </app-layout>
+  <app-loading-screen v-else />
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
+<script lang="ts">
+import { onMounted, ref } from 'vue';
+import AppLayout from './components/layouts/AppLayout.vue';
+import AppLoadingScreen from './components/common/AppLoadingScreen.vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 export default {
+  components: { AppLayout, AppLoadingScreen },
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
+  setup() {
+    const router = useRouter();
+    const store = useStore();
+    const isReady = ref(false);
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+    onMounted(() => {
+      const token = window.localStorage.getItem('token');
+      if (token) {
+        store
+          .dispatch('getUser', token)
+          .catch(() => {
+            window.localStorage.removeItem('token');
+            router.push('/');
+          })
+          .finally(() => {
+            isReady.value = true;
+          });
+      } else {
+        isReady.value = true;
+      }
+    });
+
+    return { isReady };
+  },
+};
+</script>
