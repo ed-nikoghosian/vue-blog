@@ -40,7 +40,7 @@ export default defineComponent({
         .dispatch('editPost', {
           postId: post.value?.id,
           data: {
-            ...post,
+            ...post.value,
             ...values,
           },
         })
